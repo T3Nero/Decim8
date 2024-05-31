@@ -13,5 +13,9 @@ UCLASS()
 class DECIM8_API ADecim8PlayerCharacter : public ADecim8CharacterBase
 {
 	GENERATED_BODY()
+
+public:
+
+	ADecim8PlayerCharacter();
 	
 };

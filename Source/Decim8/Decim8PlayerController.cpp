@@ -11,7 +11,6 @@
 #include "EnhancedInputSubsystems.h"
 #include "Engine/LocalPlayer.h"
 
-DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 ADecim8PlayerController::ADecim8PlayerController()
 {
@@ -19,18 +18,21 @@ ADecim8PlayerController::ADecim8PlayerController()
 	DefaultMouseCursor = EMouseCursor::Default;
 	CachedDestination = FVector::ZeroVector;
 	FollowTime = 0.f;
+	bReplicates = true;
 }
 
 void ADecim8PlayerController::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
+	check(Decim8Context); // check if context is valid before continuing
 
 	//Add Input Mapping Context
-	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
-	{
-		Subsystem->AddMappingContext(DefaultMappingContext, 0);
-	}
+	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
+	check(Subsystem);
+	Subsystem->AddMappingContext(Decim8Context, 0);
+	
+
 }
 
 void ADecim8PlayerController::SetupInputComponent()
@@ -38,19 +40,14 @@ void ADecim8PlayerController::SetupInputComponent()
 	// set up gameplay key bindings
 	Super::SetupInputComponent();
 
-	// Set up action bindings
-	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent))
-	{
-		// Setup mouse input events
-		EnhancedInputComponent->BindAction(MouseMoveAction, ETriggerEvent::Started, this, &ADecim8PlayerController::OnInputStarted);
-		EnhancedInputComponent->BindAction(MouseMoveAction, ETriggerEvent::Triggered, this, &ADecim8PlayerController::OnSetDestinationTriggered);
+	// Set up input action bindings
+	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
 
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ADecim8PlayerController::Move);
-	}
-	else
-	{
-		UE_LOG(LogTemplateCharacter, Error, TEXT("'%s' Failed to find an Enhanced Input Component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
-	}
+	EnhancedInputComponent->BindAction(MouseMoveAction, ETriggerEvent::Started, this, &ADecim8PlayerController::OnInputStarted);
+	EnhancedInputComponent->BindAction(MouseMoveAction, ETriggerEvent::Triggered, this, &ADecim8PlayerController::OnSetDestinationTriggered);
+
+	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ADecim8PlayerController::Move);
+
 }
 
 void ADecim8PlayerController::OnInputStarted()

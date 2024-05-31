@@ -14,8 +14,6 @@ class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
-
 UCLASS()
 class ADecim8PlayerController : public APlayerController
 {
@@ -32,37 +30,38 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	UNiagaraSystem* FXCursor;
 
-	/** MappingContext */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
-	UInputMappingContext* DefaultMappingContext;
-	
-	/** Left Mouse Click Move Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
-	UInputAction* MouseMoveAction;
 
-	/** Gamepad Left Thumbstick Move Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* MoveAction;
 
 
 protected:
-	/** True if the controlled character should navigate to the mouse cursor. */
-	uint32 bMoveToMouseCursor : 1;
+
+	// To add mapping context
+	virtual void BeginPlay() override;
 
 	virtual void SetupInputComponent() override;
 	
-	// To add mapping context
-	virtual void BeginPlay();
-
 	/** Input handlers for SetDestination action. */
 	void OnInputStarted();
 	void OnSetDestinationTriggered();
 
-	/** Input handler for Gamepad Movement action */
+	/** Input handler for Gamepad/WASD move action */
 	void Move(const FInputActionValue& Value);
 
 
 private:
+
+	/** MappingContext */
+	UPROPERTY(EditAnywhere, Category = Input)
+	TObjectPtr<UInputMappingContext> Decim8Context;
+
+	/** Left Mouse Click Move Input Action */
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* MouseMoveAction;
+
+	/* WASD/Gamepad Move Input Action */
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* MoveAction;
+
 	FVector CachedDestination;
 
 	float FollowTime; // For how long it has been pressed
