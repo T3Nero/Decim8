@@ -10,15 +10,80 @@
 #include "InputActionValue.h"
 #include "EnhancedInputSubsystems.h"
 #include "Engine/LocalPlayer.h"
+#include <Interaction/InteractInterface.h>
 
 
 ADecim8PlayerController::ADecim8PlayerController()
 {
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Default;
-	CachedDestination = FVector::ZeroVector;
-	FollowTime = 0.f;
 	bReplicates = true;
+}
+
+void ADecim8PlayerController::PlayerTick(float DeltaTime)
+{
+	Super::PlayerTick(DeltaTime);
+	CursorTrace();
+
+}
+
+
+void ADecim8PlayerController::CursorTrace()
+{
+	FHitResult Hit;
+	GetHitResultUnderCursor(ECC_Visibility, false, Hit);
+	if(!Hit.bBlockingHit) { return; }
+
+	LastActor = ThisActor;
+	ThisActor = Hit.GetActor();
+
+	/*
+	*  Line trace from cursor. There are several scenarios
+	* A. LastActor is null && ThisActor is null
+	*	- Do nothing.
+	* B. LastActor is null && ThisActor is valid
+	*	- Highlight ThisActor
+	* C. LastActor is valid && ThisActor is null
+	*	- UnHighlight LastActor
+	* D. Both actor valid, but LastActor != ThisActor
+	*	- UnHighlight LastActor, Highlight ThisActor
+	* E. Both actors valid, and are the same actor
+	*	- Do nothing
+	*/
+
+	if(LastActor == nullptr)
+	{
+		if(ThisActor != nullptr)
+		{
+			// Scenario B
+			ThisActor->HighlightActor();
+		}
+		else
+		{
+			// A: Do Nothing
+		}
+	}
+	else
+	{
+		if(ThisActor == nullptr)
+		{
+			// Scenario C
+			LastActor->UnHighlightActor();
+		}
+		else
+		{
+			if(LastActor != ThisActor)
+			{
+				// Scenario D
+				LastActor->UnHighlightActor();
+				ThisActor->HighlightActor();
+			}
+			else
+			{
+				// E: Do Nothing
+			}
+		}
+	}
 }
 
 void ADecim8PlayerController::BeginPlay()
@@ -27,7 +92,7 @@ void ADecim8PlayerController::BeginPlay()
 	Super::BeginPlay();
 	check(Decim8Context); // check if context is valid before continuing
 
-	//Add Input Mapping Context
+	//Add Enhanced Input Mapping Context
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
 	check(Subsystem);
 	Subsystem->AddMappingContext(Decim8Context, 0);
@@ -59,26 +124,21 @@ void ADecim8PlayerController::OnInputStarted()
 void ADecim8PlayerController::OnSetDestinationTriggered()
 {
 	
-	// We flag that the input is being pressed
-	FollowTime += GetWorld()->GetDeltaSeconds();
-	
 	// We look for the location in the world where the player has pressed the input
 	FHitResult Hit;
 	bool bHitSuccessful = false;
 	bHitSuccessful = GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, true, Hit);
 
-	// If we hit a surface, cache the location
+	// Hit successful if we hit a surface
 	if (bHitSuccessful)
-	{
-		CachedDestination = Hit.Location;
+	{	
+		// Move towards mouse pointer
+		APawn* ControlledPawn = GetPawn();
+		if (ControlledPawn != nullptr)
+		{
+			FVector WorldDirection = (Hit.Location - ControlledPawn->GetActorLocation()).GetSafeNormal();
+			ControlledPawn->AddMovementInput(WorldDirection, 1.0, false);
 	}
-	
-	// Move towards mouse pointer or touch
-	APawn* ControlledPawn = GetPawn();
-	if (ControlledPawn != nullptr)
-	{
-		FVector WorldDirection = (CachedDestination - ControlledPawn->GetActorLocation()).GetSafeNormal();
-		ControlledPawn->AddMovementInput(WorldDirection, 1.0, false);
 	}
 }
 
@@ -106,3 +166,4 @@ void ADecim8PlayerController::Move(const FInputActionValue& Value)
 		ControlledPawn->AddMovementInput(RightDirection, MovementVector.X);
 	}
 }
+

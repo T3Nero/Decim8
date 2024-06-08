@@ -13,6 +13,7 @@ class UNiagaraSystem;
 class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
+class IInteractInterface;
 
 UCLASS()
 class ADecim8PlayerController : public APlayerController
@@ -22,16 +23,7 @@ class ADecim8PlayerController : public APlayerController
 public:
 	ADecim8PlayerController();
 
-	/** Time Threshold to know if it was a short press */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	float ShortPressThreshold;
-
-	/** FX Class that we will spawn when clicking */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	UNiagaraSystem* FXCursor;
-
-
-
+	virtual void PlayerTick(float DeltaTime) override;
 
 protected:
 
@@ -62,9 +54,11 @@ private:
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* MoveAction;
 
-	FVector CachedDestination;
+	void CursorTrace();
+	
+	TScriptInterface<IInteractInterface> LastActor;
+	TScriptInterface<IInteractInterface> ThisActor;
 
-	float FollowTime; // For how long it has been pressed
 };
 
 
