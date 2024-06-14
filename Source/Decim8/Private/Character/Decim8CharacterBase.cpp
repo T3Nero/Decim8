@@ -17,6 +17,11 @@ ADecim8CharacterBase::ADecim8CharacterBase()
 
 }
 
+UAbilitySystemComponent* ADecim8CharacterBase::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
+}
+
 // Called when the game starts or when spawned
 void ADecim8CharacterBase::BeginPlay()
 {

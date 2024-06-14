@@ -4,20 +4,24 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
-#include "GameFramework/Character.h"
-#include "Decim8CharacterBase.generated.h"
+#include "GameFramework/PlayerState.h"
+#include "Decim8PlayerState.generated.h"
+
+/**
+ * 
+ */
 
 class UAbilitySystemComponent;
 class UAttributeSet;
 
-UCLASS(Abstract)
-class DECIM8_API ADecim8CharacterBase : public ACharacter, public IAbilitySystemInterface
+UCLASS()
+class DECIM8_API ADecim8PlayerState : public APlayerState, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
-	ADecim8CharacterBase();
+
+	ADecim8PlayerState();
 
 	// overriden from Ability System Interface
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
@@ -25,17 +29,11 @@ public:
 	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-	UPROPERTY(EditAnywhere, Category = "Combat")
-	TObjectPtr<USkeletalMeshComponent> Weapon;
 
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
-
-
+	
 };

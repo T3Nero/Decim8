@@ -17,6 +17,8 @@ class DECIM8_API ADecim8EnemyCharacter : public ADecim8CharacterBase, public IIn
 
 public:
 
+	ADecim8EnemyCharacter();
+
 	// overriden from Interact Interface
 	virtual void HighlightActor() override;
 	virtual void UnHighlightActor() override;
