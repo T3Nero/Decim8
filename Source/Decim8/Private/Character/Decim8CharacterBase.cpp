@@ -3,6 +3,8 @@
 
 #include "Character/Decim8CharacterBase.h"
 
+
+
 // Sets default values
 ADecim8CharacterBase::ADecim8CharacterBase()
 {

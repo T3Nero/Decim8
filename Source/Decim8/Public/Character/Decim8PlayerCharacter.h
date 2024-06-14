@@ -17,5 +17,13 @@ class DECIM8_API ADecim8PlayerCharacter : public ADecim8CharacterBase
 public:
 
 	ADecim8PlayerCharacter();
+
+	virtual void PossessedBy(AController* NewController) override;
+	virtual void OnRep_PlayerState() override;
+
+private:
+
+	void InitAbilityActorInfo();
+
 	
 };
