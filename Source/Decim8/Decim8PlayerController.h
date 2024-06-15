@@ -54,8 +54,10 @@ private:
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* MoveAction;
 
-	void CursorTrace();
+	// Highlight Actor Using Trace Detection (Actor must implement Interact Interface)
+	void InteractTrace();
 	
+	// Actors which can be interacted with (Defined in InteractTrace())
 	TScriptInterface<IInteractInterface> LastActor;
 	TScriptInterface<IInteractInterface> ThisActor;
 

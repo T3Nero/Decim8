@@ -23,22 +23,41 @@ ADecim8PlayerController::ADecim8PlayerController()
 void ADecim8PlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
-	CursorTrace();
+	InteractTrace();
 
 }
 
 
-void ADecim8PlayerController::CursorTrace()
+void ADecim8PlayerController::InteractTrace()
 {
 	FHitResult Hit;
-	GetHitResultUnderCursor(ECC_Visibility, false, Hit);
-	if(!Hit.bBlockingHit) { return; }
+	
+	if(!bShowMouseCursor)
+	{
+		// Trace Detection Using Gamepad
+		APawn* ControlledPawn = GetPawn();
+		FVector ForwardVector = ControlledPawn->GetActorRotation().Vector();
+		ForwardVector *= 800.f; // The length of the trace from actors location 
+		FVector EndTrace = ControlledPawn->GetActorLocation() += ForwardVector;
+		FQuat Rot;
 
+		FCollisionQueryParams TraceParams;
+		TraceParams.AddIgnoredActor(ControlledPawn);
+
+		GetWorld()->SweepSingleByChannel(Hit, ControlledPawn->GetActorLocation(), EndTrace, Rot, ECC_Visibility, FCollisionShape::MakeSphere(50.0f), TraceParams);
+	}
+	else
+	{
+		// Trace Detection Under Mouse Cursor
+		GetHitResultUnderCursor(ECC_Visibility, false, Hit);
+	}
+
+	// Actor to interact with (Highlight)
 	LastActor = ThisActor;
 	ThisActor = Hit.GetActor();
 
 	/*
-	*  Line trace from cursor. There are several scenarios
+	*  Trace Detection. There are several scenarios
 	* A. LastActor is null && ThisActor is null
 	*	- Do nothing.
 	* B. LastActor is null && ThisActor is valid
