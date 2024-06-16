@@ -3,11 +3,15 @@
 
 #include "AbilitySystem/Decim8AttributeSet.h"
 
-#include "AbilitySystemComponent.h"
 #include "Net/UnrealNetwork.h"
 
 UDecim8AttributeSet::UDecim8AttributeSet()
 {
+	// Created from attribute accessors macro (initializes stat values)
+	InitHealth(100.f);
+	InitMaxHealth(100.f);
+	InitMana(100.f);
+	InitMaxMana(100.f);
 }
 
 void UDecim8AttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
