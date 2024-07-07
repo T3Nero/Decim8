@@ -6,6 +6,8 @@
 #include "GameFramework//CharacterMovementComponent.h"
 #include "Decim8PlayerState.h"
 #include "AbilitySystemComponent.h"
+#include "Decim8/Decim8PlayerController.h"
+#include <UI/Decim8HUD.h>
 
 ADecim8PlayerCharacter::ADecim8PlayerCharacter()
 {
@@ -38,10 +40,21 @@ void ADecim8PlayerCharacter::OnRep_PlayerState()
 void ADecim8PlayerCharacter::InitAbilityActorInfo()
 {
 	ADecim8PlayerState* Decim8PlayerState = GetPlayerState<ADecim8PlayerState>();
-	check(Decim8PlayerState);
-	Decim8PlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(Decim8PlayerState, this);
+	if(Decim8PlayerState)
+	{
+		Decim8PlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(Decim8PlayerState, this);
 
-	// Init ASC & Attribute Set for the Player
-	AbilitySystemComponent = Decim8PlayerState->GetAbilitySystemComponent();
-	AttributeSet = Decim8PlayerState->GetAttributeSet();
+		// Init ASC & Attribute Set for the Player
+		AbilitySystemComponent = Decim8PlayerState->GetAbilitySystemComponent();
+		AttributeSet = Decim8PlayerState->GetAttributeSet();
+
+		if(ADecim8PlayerController* Decim8PlayerController = Cast<ADecim8PlayerController>(GetController()))
+		{
+			if(ADecim8HUD* Decim8HUD = Cast<ADecim8HUD>(Decim8PlayerController->GetHUD()))
+			{
+				Decim8HUD->InitOverlay(Decim8PlayerController, Decim8PlayerState, AbilitySystemComponent, AttributeSet);
+			}
+		}
+
+	}
 }

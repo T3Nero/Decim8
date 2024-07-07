@@ -36,15 +36,18 @@ void ADecim8PlayerController::InteractTrace()
 	{
 		// Trace Detection Using Gamepad
 		APawn* ControlledPawn = GetPawn();
+		const FVector StartTrace = ControlledPawn->GetActorLocation();
+
 		FVector ForwardVector = ControlledPawn->GetActorRotation().Vector();
-		ForwardVector *= 800.f; // The length of the trace from actors location 
-		FVector EndTrace = ControlledPawn->GetActorLocation() += ForwardVector;
-		FQuat Rot;
+		ForwardVector *= TraceLength; // The length of the trace from actors location 
+		const FVector EndTrace = ControlledPawn->GetActorLocation() += ForwardVector;
+
+		const FCollisionShape ColShape = FCollisionShape::MakeSphere(Radius);
 
 		FCollisionQueryParams TraceParams;
 		TraceParams.AddIgnoredActor(ControlledPawn);
 
-		GetWorld()->SweepSingleByChannel(Hit, ControlledPawn->GetActorLocation(), EndTrace, Rot, ECC_Visibility, FCollisionShape::MakeSphere(50.0f), TraceParams);
+		GetWorld()->SweepSingleByChannel(Hit, StartTrace, EndTrace, FQuat::Identity, ECC_Visibility, ColShape, TraceParams);
 	}
 	else
 	{
@@ -55,6 +58,7 @@ void ADecim8PlayerController::InteractTrace()
 	// Actor to interact with (Highlight)
 	LastActor = ThisActor;
 	ThisActor = Hit.GetActor();
+
 
 	/*
 	*  Trace Detection. There are several scenarios
@@ -109,13 +113,14 @@ void ADecim8PlayerController::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
-	check(Decim8Context); // check if context is valid before continuing
+	check(Decim8Context);
 
 	//Add Enhanced Input Mapping Context
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
-	check(Subsystem);
-	Subsystem->AddMappingContext(Decim8Context, 0);
-	
+	if(Subsystem)
+	{
+		Subsystem->AddMappingContext(Decim8Context, 0);
+	}
 
 }
 

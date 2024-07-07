@@ -56,6 +56,10 @@ private:
 
 	// Highlight Actor Using Trace Detection (Actor must implement Interact Interface)
 	void InteractTrace();
+
+	// Sweep Trace Properties (Gamepad Interact Trace)
+	const float Radius = 80.0f;
+	const float TraceLength = 800.f;
 	
 	// Actors which can be interacted with (Defined in InteractTrace())
 	TScriptInterface<IInteractInterface> LastActor;
