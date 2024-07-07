@@ -14,3 +14,7 @@ void UDecim8WidgetController::SetWidgetControllerParams(const FWidgetControllerP
 void UDecim8WidgetController::BroadcastInitialValues()
 {
 }
+
+void UDecim8WidgetController::BindCallbacksToDependencies()
+{
+}

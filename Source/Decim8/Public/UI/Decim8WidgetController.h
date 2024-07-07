@@ -48,7 +48,12 @@ public:
 
 	// Overriden in OverlayWidgetController
 	// Sends out initial stat values (Health, Mana etc. from Ability System)
+	// Called in HUD class when Initialising the Widget
 	virtual void BroadcastInitialValues();
+
+	// Overriden in OverlayWidgetController
+	// Called in HUD class when Initialising the Widget
+	virtual void BindCallbacksToDependencies();
 
 protected:
 

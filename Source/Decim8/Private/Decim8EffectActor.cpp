@@ -7,6 +7,7 @@
 #include <AbilitySystemInterface.h>
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/Decim8AttributeSet.h"
+#include "UI/Decim8WidgetController.h"
 
 // Sets default values
 ADecim8EffectActor::ADecim8EffectActor()
@@ -32,6 +33,9 @@ void ADecim8EffectActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 
 		UDecim8AttributeSet* MutableDecim8Attributes = const_cast<UDecim8AttributeSet*>(Decim8Attributes);
 		MutableDecim8Attributes->SetHealth(Decim8Attributes->GetHealth() + 25.0f);
+		MutableDecim8Attributes->SetMana(Decim8Attributes->GetMana() + 25.0f);
+
+		
 		Destroy();
 	}
 

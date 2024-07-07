@@ -30,6 +30,7 @@ public:
 
 	UOverlayWidgetController* GetOverlayWidgetController(const FWidgetControllerParams& WCParams);
 
+	// Initialises WidgetController & Broadcasts Initial Stat Values then Creates the PlayerHUD & adds to viewport
 	void InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS);
 
 private:
@@ -37,6 +38,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UDecim8UIWidget> OverlayWidgetClass;
 
+	// Contains Delegates for Broadcasting Attributes to given WBP (Health stats for Health Progress Bar etc.)
 	UPROPERTY()
 	TObjectPtr<UOverlayWidgetController> OverlayWidgetController;
 
