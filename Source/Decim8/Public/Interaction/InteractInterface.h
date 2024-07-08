@@ -23,7 +23,7 @@ class DECIM8_API IInteractInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 
-	// Highlight actor on mouse over
+	// Highlight actor on mouse over or when in range using Gamepad
 	virtual void HighlightActor() = 0;
 	virtual void UnHighlightActor() = 0;
 };

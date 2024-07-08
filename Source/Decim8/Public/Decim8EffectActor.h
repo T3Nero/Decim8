@@ -6,8 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Decim8EffectActor.generated.h"
 
-class USphereComponent;
-class UStatticMeshComponent;
+class UGameplayEffect;
 
 UCLASS()
 class DECIM8_API ADecim8EffectActor : public AActor
@@ -18,22 +17,19 @@ public:
 	// Sets default values for this actor's properties
 	ADecim8EffectActor();
 
-	UFUNCTION()
-	virtual void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	UFUNCTION()
-	virtual void EndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-private:
+	// Called in Blueprint when Applying an Effect to Target (Overlapping a Health Potion etc.)
+	UFUNCTION(BlueprintCallable)
+	void ApplyEffectToTarget(AActor* Target, TSubclassOf<UGameplayEffect> GameplayEffectClass);
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<USphereComponent> Sphere;
+	// Gameplay Effect to update an Actors Attribute Value Instantly (Potion which increases Health etc.)
+	UPROPERTY(EditAnywhere, Category = "Applied Effects")
+	TSubclassOf<UGameplayEffect> InstantGameplayEffectClass;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UStaticMeshComponent> Mesh;
 
 
 };
