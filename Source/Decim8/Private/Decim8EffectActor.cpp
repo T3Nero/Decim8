@@ -29,10 +29,10 @@ void ADecim8EffectActor::BeginPlay()
 	
 }
 
-void ADecim8EffectActor::ApplyEffectToTarget(AActor* Target, TSubclassOf<UGameplayEffect> GameplayEffectClass)
+void ADecim8EffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass)
 {
-	// Returns Ability System Component of the Effect Target
-	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Target);
+	// Returns Ability System Component of the Effect Target Actor
+	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
 	if(TargetASC == nullptr) { return; }
 
 	check(GameplayEffectClass);

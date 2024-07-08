@@ -23,12 +23,13 @@ protected:
 	virtual void BeginPlay() override;
 
 	// Called in Blueprint when Applying an Effect to Target (Overlapping a Health Potion etc.)
+	// GameplayEffectClass set in Blueprint depending on what Effect is to be applied (InstantGameplayEffect etc.)
 	UFUNCTION(BlueprintCallable)
-	void ApplyEffectToTarget(AActor* Target, TSubclassOf<UGameplayEffect> GameplayEffectClass);
+	void ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass);
 
 	// Gameplay Effect to update an Actors Attribute Value Instantly (Potion which increases Health etc.)
-	UPROPERTY(EditAnywhere, Category = "Applied Effects")
-	TSubclassOf<UGameplayEffect> InstantGameplayEffectClass;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
+	TSubclassOf<UGameplayEffect> InstantGameplayEffect;
 
 
 
