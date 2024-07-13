@@ -3,11 +3,7 @@
 
 #include "Decim8EffectActor.h"
 
-#include "Components/SphereComponent.h"
-#include <AbilitySystemInterface.h>
 #include "AbilitySystemComponent.h"
-#include "AbilitySystem/Decim8AttributeSet.h"
-#include "UI/Decim8WidgetController.h"
 #include "AbilitySystemBlueprintLibrary.h"
 
 // Sets default values
@@ -39,13 +35,13 @@ void ADecim8EffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UG
 	FGameplayEffectContextHandle EffectContextHandle = TargetASC->MakeEffectContext();
 	EffectContextHandle.AddSourceObject(this);
 
-	const FGameplayEffectSpecHandle EffectSpecHandle = TargetASC->MakeOutgoingSpec(GameplayEffectClass, 1.0f, EffectContextHandle);
+	const FGameplayEffectSpecHandle EffectSpecHandle = TargetASC->MakeOutgoingSpec(GameplayEffectClass, ActorLevel, EffectContextHandle);
 
 	const FActiveGameplayEffectHandle ActiveGameplayEffect = TargetASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 
 	// Check if Active Gameplay Effect is applied Infinitely
-	const bool bIsInfinte = EffectSpecHandle.Data.Get()->Def.Get()->DurationPolicy == EGameplayEffectDurationType::Infinite;
-	if(bIsInfinte && InfiniteEffectRemovalPolicy == EEffectRemovalPolicy::RemoveOnEndOverlap)
+	const bool bIsInfinite = EffectSpecHandle.Data.Get()->Def.Get()->DurationPolicy == EGameplayEffectDurationType::Infinite;
+	if(bIsInfinite && InfiniteEffectRemovalPolicy == EEffectRemovalPolicy::RemoveOnEndOverlap)
 	{
 		// Add Active Effect to Map so OnRemoveInfiniteEffect knows which Infinite Effect to Remove
 		ActiveInfiniteEffectHandles.Add(ActiveGameplayEffect, TargetASC);

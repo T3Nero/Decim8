@@ -14,7 +14,6 @@ class UAbilitySystemComponent;
 UENUM(BlueprintType)
 enum class EEffectRemovalPolicy
 {
-	None,
 	RemoveOnEndOverlap,
 	DoNotRemove
 };
@@ -43,6 +42,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
 	bool bDestroyEffectActor = false;
 
+	// Level is used in the Curve Table to determine the Value of the Effect (Higher Level = Higher Modified Value)
+	// Such as; Creating Small / Medium / Large Health Potions
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
+	float ActorLevel = 1.0f;
+
 	// Gameplay Effect(s) to Apply (Gameplay Effect created & set in Blueprint)
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Applied Effects")
 	TArray<TSubclassOf<UGameplayEffect>> GameplayEffectsToApply;
@@ -54,6 +58,6 @@ protected:
 	// Map to hold the Infinite Gameplay Effect Handle (Required if the Infinite Gameplay Effect is to be removed)
 	TMap<FActiveGameplayEffectHandle, UAbilitySystemComponent*> ActiveInfiniteEffectHandles;
 
-
+	
 
 };
