@@ -31,3 +31,7 @@ void ADecim8CharacterBase::BeginPlay()
 	
 }
 
+void ADecim8CharacterBase::InitAbilityActorInfo()
+{
+}
+

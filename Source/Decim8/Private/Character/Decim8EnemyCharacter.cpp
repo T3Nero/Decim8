@@ -20,7 +20,13 @@ void ADecim8EnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	InitAbilityActorInfo();
+}
+
+void ADecim8EnemyCharacter::InitAbilityActorInfo()
+{
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	Cast<UDecim8AbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 }
 
 void ADecim8EnemyCharacter::HighlightActor()

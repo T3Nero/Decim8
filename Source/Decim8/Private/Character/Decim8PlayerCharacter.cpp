@@ -6,6 +6,7 @@
 #include "GameFramework//CharacterMovementComponent.h"
 #include "Decim8PlayerState.h"
 #include "AbilitySystemComponent.h"
+#include "AbilitySystem/Decim8AbilitySystemComponent.h"
 #include "Decim8/Decim8PlayerController.h"
 #include <UI/Decim8HUD.h>
 
@@ -43,6 +44,7 @@ void ADecim8PlayerCharacter::InitAbilityActorInfo()
 	if(Decim8PlayerState)
 	{
 		Decim8PlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(Decim8PlayerState, this);
+		Cast<UDecim8AbilitySystemComponent>(Decim8PlayerState->GetAbilitySystemComponent())->AbilityActorInfoSet();
 
 		// Init ASC & Attribute Set for the Player
 		AbilitySystemComponent = Decim8PlayerState->GetAbilitySystemComponent();
