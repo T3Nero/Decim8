@@ -2,6 +2,8 @@
 
 
 #include "UI/OverlayWidgetController.h"
+
+#include "AbilitySystem/Decim8AbilitySystemComponent.h"
 #include "AbilitySystem/Decim8AttributeSet.h"
 
 void UOverlayWidgetController::BroadcastInitialValues()
@@ -32,6 +34,13 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
 		Attributes->GetMaxManaAttribute()).AddUObject(this, &UOverlayWidgetController::MaxManaChanged);
+
+	Cast<UDecim8AbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda(
+		[](const FGameplayTagContainer& AssetTags)
+		{
+			
+		}
+	);
 }
 
 void UOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data) const
